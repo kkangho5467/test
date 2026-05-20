@@ -1,4 +1,4 @@
-# Project rules for agents and automation (Ch9-aware)
+# Project rules for agents and automation (Ch10-aware)
 
 These rules are used by automated agents and helpers when modifying this repository.
 
@@ -12,6 +12,10 @@ Core constraints:
   - Do not place `service_role` keys or other server-only secrets in client code or `.env.local` with `NEXT_PUBLIC_` prefix.
   - Protect pages using `middleware.ts` (App Router middleware).
 - For server-side Supabase usage (server actions, middleware), use `@supabase/ssr` helpers where appropriate.
+- Ch10 CRUD rules:
+  - Keep `posts` and `profiles` column names fixed as provided by the user.
+  - Reuse `lib/supabase/client.ts` and `contexts/AuthContext.tsx` instead of duplicating browser session logic.
+  - Treat edit/delete controls as UX only; real authorization and enforcement belong to Ch11 RLS.
 
 Checklist for agent edits:
 - When adding auth docs or code, add a Version Policy note and list the actual `package.json` versions.

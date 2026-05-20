@@ -19,7 +19,9 @@ export function createClient() {
   if (!url || !anonKey) {
     throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables');
   }
-
+// 🔴 범인 검거용 로그 추가!
+  console.log("https://rrgiicteirfvbfwzhogo.supabase.co:", url);
+  console.log("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZ2lpY3RlaXJmdmJmd3pob2dvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNjA5NTYsImV4cCI6MjA5NDgzNjk1Nn0.MTNnm34hs64tmLNPFnHGXeoEZdY_WGr-Lg8B4DY_Qgg", anonKey);
   client = createBrowserClient(url, anonKey);
   return client;
 }

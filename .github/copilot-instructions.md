@@ -45,6 +45,20 @@
 - 클라이언트에서 인증 호출은 `signInWithPassword` / `signUp` / `signOut` 패턴을 사용합니다. 구버전 `auth.signIn()` 사용 금지.
 - 서비스롤(`service_role`) 키는 절대 클라이언트에 두지 마세요.
 - 보호 라우트는 `middleware.ts`로 구현합니다 (App Router 기준).
+- 대시보드 확인 메뉴는 2026년 5월 기준으로 `Authentication -> Sign In / Providers -> Email`, `Authentication -> URL Configuration`을 안내합니다.
+
+## Ch10 posts CRUD notes
+
+- 게시글 컬럼명은 `posts.id`, `posts.user_id`, `posts.title`, `posts.content`, `posts.created_at`로 고정합니다.
+- 프로필 컬럼명은 `profiles.id`, `profiles.username`, `profiles.avatar_url`, `profiles.role`로 고정합니다.
+- CRUD는 App Router만 사용하고 `next/router`는 금지합니다.
+- 수정/삭제 UI는 UX이며, 실제 보안은 Ch11 RLS에서 처리합니다.
+- `lib/supabase/client.ts`와 `contexts/AuthContext.tsx`를 재사용해 브라우저 세션과 사용자 상태를 연결합니다.
+
+## Ch8 CLI / 연결 확인
+
+- 프로젝트 연결 확인은 `supabase projects list`와 `supabase projects api-keys` 기준으로 안내합니다.
+- 문서 설명은 Ch7·Ch8 교재 기준을 우선하고, 실제 버전은 `package.json`을 따릅니다.
 
 ## Version Policy (간단)
 

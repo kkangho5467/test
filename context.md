@@ -6,6 +6,8 @@
 - 포스트 목록(`/posts`): 구현 완료, 검색/삭제 UI 포함
 - 포스트 상세(`/posts/[id]`): 구현 완료
 - 포스트 작성(`/posts/new`): 구현 완료, API 전송 및 탭 간 동기화 포함
+- Supabase Auth(`signup`/`login`/`logout`): 구현 완료
+- Ch10 게시글 CRUD 준비: 문서 기준 정리 완료, 실제 구현은 다음 단계
 - shadcn/ui 초기화: 완료
 - `ARCHITECTURE.md`: 작성 완료
 
@@ -17,8 +19,10 @@
 - React 19.2.4 + TypeScript + Tailwind CSS 4
 - shadcn/ui는 `components/ui/` 경로에 복사해서 사용
 - 로컬 데이터 소스는 `lib/posts.ts`
+- Ch8 Supabase 클라이언트는 `lib/supabase/client.ts`를 사용한다.
+- Ch9 인증은 `contexts/AuthContext.tsx`의 `AuthProvider/useAuth`를 사용한다.
 - 실데이터/인증/권한은 Ch8 이후 Supabase 또는 PostgreSQL로 이전 예정
-- 데이터 모델은 UUID 기반 `users` / `posts` 중심으로 확장 예정
+- 데이터 모델은 UUID 기반 `profiles` / `posts` 중심으로 확장 예정
 
 ## Ch9 Supabase Auth 기준 요약
 
@@ -27,6 +31,22 @@
 - 인증 방식: 이메일/비밀번호(`signInWithPassword`)만 사용, 소셜 로그인 사용 안 함
 - 클라이언트에 `service_role` 키를 두지 않음
 - 보호 라우트는 `middleware.ts`로 구현함
+- 생성/수정 파일: `lib/auth.ts`, `app/login/page.tsx`, `app/signup/page.tsx`, `contexts/AuthContext.tsx`, `components/Header.tsx`, `middleware.ts`
+- 보호 라우트: `/posts/new`
+- Supabase 대시보드 확인: `Authentication -> Sign In / Providers -> Email`, `Authentication -> URL Configuration`
+
+## Ch10 게시글 CRUD 기준 요약
+
+- 게시글 컬럼은 `posts.id`, `posts.user_id`, `posts.title`, `posts.content`, `posts.created_at`를 그대로 사용한다.
+- 프로필 컬럼은 `profiles.id`, `profiles.username`, `profiles.avatar_url`, `profiles.role`를 그대로 사용한다.
+- App Router만 사용하고 `next/router`는 사용하지 않는다.
+- 수정/삭제 UI는 사용자 경험(UX)이며, 실제 보안은 Ch11 RLS에서 처리한다.
+- 게시글 CRUD 시작 전에는 목록/상세/작성 흐름과 편집/삭제 경로를 먼저 문서화한다.
+
+## Ch8 Supabase CLI 연결 확인
+
+- CLI 연결 확인: `supabase projects list`, `supabase projects api-keys`
+- 로컬 작업 전후로 프로젝트 연결 상태와 API 키 설정을 다시 확인한다.
 
 ## 현재 설치(실제) 기준
 

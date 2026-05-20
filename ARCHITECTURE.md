@@ -19,14 +19,25 @@
 - `/posts/new` — 포스트 작성
   - 제목/작성자/내용 입력, 저장, 브로드캐스트 동기화
 
-### 2.2 확장 예정 페이지
+### 2.2 Ch10 CRUD 기준 페이지/동작
+
+- `/posts` — 목록
+  - 조회, 검색, 상세 진입, 수정/삭제 진입점
+- `/posts/[id]` — 상세
+  - 본문 확인, 수정/삭제 이동 또는 액션 제공
+- `/posts/new` — 작성
+  - 생성 기능 유지
+- `/posts/[id]/edit` — 수정(예정)
+  - App Router 기반 편집 화면
+
+### 2.3 확장 예정 페이지
 
 - `/login` — 로그인
 - `/signup` — 회원가입
 - `/mypage` — 마이페이지
 - `/admin` — 관리 영역(선택)
 
-### 2.3 App Router 폴더 구조
+### 2.4 App Router 폴더 구조
 
 | URL | 파일 |
 | --- | --- |
@@ -54,11 +65,19 @@
 3. 저장 시 API로 전송하고 성공하면 `/posts`로 이동한다.
 4. 다른 탭은 BroadcastChannel 또는 localStorage storage 이벤트로 목록을 갱신한다.
 
-### 3.3 관리 흐름
+### 3.3 글 수정/삭제
 
-1. 로그인한 사용자가 마이페이지 또는 작성 기능에 접근한다.
-2. 본인 글 수정/삭제, 프로필 확인, 권한별 기능 노출을 처리한다.
-3. 이후 Supabase RLS로 서버 권한을 강제한다.
+1. 사용자가 `/posts` 또는 `/posts/[id]`에서 수정/삭제 진입점을 본다.
+2. 수정은 App Router 페이지 또는 편집 폼으로 이동한다.
+3. 삭제는 목록/상세에서 확인 후 처리한다.
+4. 화면상의 수정/삭제 UI는 UX이며, 실제 권한 검증은 Ch11 RLS에서 처리한다.
+
+### 3.4 관리 흐름
+
+1. 사용자가 `/signup`에서 이메일/비밀번호로 회원가입한다.
+2. `/login`에서 로그인 후 `/posts`로 이동한다.
+3. 로그인한 사용자가 `/posts/new`에 접근해 글을 작성한다.
+4. 이후 Supabase RLS로 서버 권한을 강제한다.
 
 ## 4. 컴포넌트 계층
 
@@ -79,6 +98,30 @@
   - 단일 포스트 상세 보기
 - `app/posts/new/page.tsx`
   - 작성 폼과 저장 요청 처리
+
+### 4.2.1 인증 흐름
+
+- `app/signup/page.tsx`
+  - 이메일/비밀번호 회원가입 폼
+- `app/login/page.tsx`
+  - 이메일/비밀번호 로그인 폼
+- `contexts/AuthContext.tsx`
+  - 사용자 상태, 로딩 상태, 로그인/회원가입/로그아웃 함수 제공
+- `components/Header.tsx`
+  - 인증 상태에 따라 로그인/회원가입 또는 글쓰기/로그아웃 UI 분기
+- `middleware.ts`
+  - `/posts/new` 보호, 미인증 사용자는 `/login`으로 이동
+
+### 4.2.2 게시글 CRUD 흐름
+
+- `app/posts/page.tsx`
+  - 목록 조회, 검색, 삭제 진입점
+- `app/posts/[id]/page.tsx`
+  - 상세 조회, 수정/삭제 진입점
+- `app/posts/new/page.tsx`
+  - 생성 폼
+- `app/posts/[id]/edit/page.tsx`
+  - 수정 폼(예정)
 
 ### 4.3 도메인 컴포넌트 계층
 
@@ -125,6 +168,13 @@ flowchart LR
 - `/posts/new`는 `POST /api/posts`로 저장 요청을 보낸다.
 - 성공 시 다른 탭은 BroadcastChannel 또는 localStorage 기반 이벤트로 동기화한다.
 
+### Ch10 CRUD 데이터 흐름
+
+- 목록/상세/생성/수정/삭제는 Ch8 스키마의 `posts` 컬럼명을 그대로 사용한다.
+- `lib/supabase/client.ts`는 브라우저 세션과 연동되는 Supabase 클라이언트의 공통 진입점이다.
+- `contexts/AuthContext.tsx`의 `AuthProvider/useAuth`는 현재 사용자 상태를 CRUD 화면에 전달한다.
+- 수정/삭제 버튼은 화면에 노출되더라도 실제 권한 제어는 Ch11 RLS에서 강제한다.
+
 ## 6. 데이터 모델
 
 ### 6.1 현재 로컬 모델
@@ -141,52 +191,41 @@ export type Post = {
 
 ### 6.2 목표 DB 모델
 
-#### users
+#### Ch8/Ch10 공통 전제
+
+- `posts` 컬럼명은 `id`, `user_id`, `title`, `content`, `created_at`로 고정한다.
+- `profiles` 컬럼명은 `id`, `username`, `avatar_url`, `role`로 고정한다.
+- App Router에서 CRUD 페이지를 분리하되, 권한 검증은 서버와 RLS에 둔다.
+
+#### profiles
 
 - `id`: uuid, primary key
-- `email`: text, unique
-- `name`: text
 - `avatar_url`: text, nullable
-- `role`: enum or text (`user`, `admin`, `author`)
-- `created_at`: timestamptz
-- `updated_at`: timestamptz
+- `username`: text
+- `role`: text
+
+#### auth.users
+
+- `id`: uuid, primary key
+- Supabase Auth가 관리하는 사용자 테이블이다.
+- `profiles.id`는 `auth.users.id`를 참조한다.
 
 #### posts
 
 - `id`: uuid, primary key
-- `user_id`: uuid, foreign key -> `users.id`
+- `user_id`: uuid, foreign key -> `profiles.id`
 - `title`: text
-- `slug`: text, unique
 - `content`: text
-- `excerpt`: text, nullable
-- `status`: text or enum (`draft`, `published`, `archived`)
-- `published_at`: timestamptz, nullable
 - `created_at`: timestamptz
-- `updated_at`: timestamptz
-- `deleted_at`: timestamptz, nullable
-
-#### tags (선택)
-
-- `id`: uuid, primary key
-- `name`: text
-- `slug`: text, unique
-
-#### post_tags (선택)
-
-- `post_id`: uuid, fk -> `posts.id`
-- `tag_id`: uuid, fk -> `tags.id`
 
 ### 6.3 관계
 
-- 한 명의 `user`는 여러 개의 `post`를 작성할 수 있다. `users (1) -> posts (N)`.
-- `post`와 `tag`는 다대다 관계다. 필요 시 `post_tags` 조인 테이블로 연결한다.
+- 한 명의 `profile`은 여러 개의 `post`를 작성할 수 있다. `profiles (1) -> posts (N)`.
 
 ### 6.4 인덱스 계획
 
-- `posts.slug` unique index
 - `posts.user_id` index
 - `posts.published_at` index
-- `posts.status` index
 - 검색용 full-text index는 PostgreSQL `tsvector` + `GIN` 고려
 
 ## 7. 컴포넌트 API 초안
@@ -242,4 +281,7 @@ type NewPostInput = {
 1. 현재 페이지 구조 유지하면서 shadcn/ui 컴포넌트 적용을 안정화한다.
 2. 로컬 `Post` 모델을 DB 모델과 맞춰 정리한다.
 3. Prisma 또는 Supabase 스키마로 이전할 준비를 한다.
-4. 인증, 권한, RLS, 댓글 등 확장 기능을 차례대로 추가한다.
+4. 인증 흐름은 `signup -> login -> posts` 순서로 유지한다.
+5. 헤더는 비로그인 상태에서 로그인/회원가입, 로그인 상태에서 글쓰기/로그아웃을 노출한다.
+6. 보호 라우트는 `/posts/new`를 기본으로 유지한다.
+7. 인증, 권한, RLS, 댓글 등 확장 기능을 차례대로 추가한다.

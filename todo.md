@@ -34,13 +34,26 @@
 - [ ] RLS 또는 권한 검증 추가
 
 ### Ch9 (Supabase Auth) 추가 작업
-- [ ] 이메일/비밀번호 회원가입 페이지 구현 (`/signup`)
-- [ ] 로그인 페이지 구현 (`/login`)
-- [ ] 로그아웃 흐름 구현
-- [ ] `contexts/AuthContext.tsx` 또는 `components/AuthProvider.tsx` 생성
-- [ ] `lib/auth.ts` 생성 (signInWithPassword, signUp, signOut 래퍼)
-- [ ] `/posts/new` 보호 및 `middleware.ts` 추가
-- [ ] Header에서 로그인/로그아웃 UI 연결
+- [x] 회원가입 구현
+- [x] 로그인 구현
+- [x] 로그아웃 구현
+- [x] Header 로그인 상태 분기
+- [x] `/posts/new` 보호
+- [x] `npm run build` 검증
+- [x] Vercel 배포 URL 검증
+- [x] `contexts/AuthContext.tsx` 생성 (AuthProvider + useAuth)
+- [x] `lib/auth.ts` 생성 (signInWithPassword, signUp, signOut 래퍼)
+
+### Ch10 (게시글 CRUD) 준비 작업
+- [ ] 게시글 목록 조회 정리
+- [ ] 게시글 상세 조회 정리
+- [ ] 게시글 생성 흐름 확인
+- [ ] 게시글 수정 UI/경로 설계
+- [ ] 게시글 삭제 UI/경로 설계
+- [ ] Ch8 스키마 컬럼명 재확인
+- [ ] `lib/supabase/client.ts` 재사용 경로 정리
+- [ ] `AuthProvider/useAuth`와 CRUD 접근 흐름 연결
+- [ ] 수정/삭제는 UX, 보안은 Ch11 RLS로 분리
 
 ## 6단계: 마무리
 - [ ] 테스트 보강
@@ -48,5 +61,5 @@
 - [ ] 스크린샷 검증
 
 ## 진행률
-- 완료 기준: 13/23
-- 상태: Ch7 설계 및 UI 기반은 대부분 완료, 데이터 계층 설계로 이동 중
+- 완료 기준: 19/34
+- 상태: Ch9 Supabase Auth 완료, Ch10 게시글 CRUD 문서 정비 시작 단계
