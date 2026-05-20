@@ -6,9 +6,9 @@ const isBrowser = typeof window !== 'undefined';
 
 let client: ReturnType<typeof createBrowserClient> | null = null;
 
-export function getBrowserSupabase() {
+export function createClient() {
   if (!isBrowser) {
-    throw new Error('getBrowserSupabase() must be called in the browser (client-side).');
+    throw new Error('createClient() must be called in the browser (client-side).');
   }
 
   if (client) return client;
@@ -24,4 +24,6 @@ export function getBrowserSupabase() {
   return client;
 }
 
-export default getBrowserSupabase;
+export const getBrowserSupabase = createClient;
+
+export default createClient;

@@ -33,6 +33,15 @@
 - [ ] 인증/권한 설계
 - [ ] RLS 또는 권한 검증 추가
 
+### Ch9 (Supabase Auth) 추가 작업
+- [ ] 이메일/비밀번호 회원가입 페이지 구현 (`/signup`)
+- [ ] 로그인 페이지 구현 (`/login`)
+- [ ] 로그아웃 흐름 구현
+- [ ] `contexts/AuthContext.tsx` 또는 `components/AuthProvider.tsx` 생성
+- [ ] `lib/auth.ts` 생성 (signInWithPassword, signUp, signOut 래퍼)
+- [ ] `/posts/new` 보호 및 `middleware.ts` 추가
+- [ ] Header에서 로그인/로그아웃 UI 연결
+
 ## 6단계: 마무리
 - [ ] 테스트 보강
 - [ ] 문서 정리

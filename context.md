@@ -12,11 +12,30 @@
 ## 기술 결정 사항
 
 - Next.js 16.2.6 App Router 사용
+- Next.js 16.2.6 App Router 사용
+	- 교재 기준(Ch9): Next.js 16.2.1 — 문서/예제는 교재 기준을 따릅니다. 실제 설치된 버전: `package.json` 참조 (`next": "16.2.6"`).
 - React 19.2.4 + TypeScript + Tailwind CSS 4
 - shadcn/ui는 `components/ui/` 경로에 복사해서 사용
 - 로컬 데이터 소스는 `lib/posts.ts`
 - 실데이터/인증/권한은 Ch8 이후 Supabase 또는 PostgreSQL로 이전 예정
 - 데이터 모델은 UUID 기반 `users` / `posts` 중심으로 확장 예정
+
+## Ch9 Supabase Auth 기준 요약
+
+- 교재 기준 패키지: `@supabase/supabase-js` 2.47.12, `@supabase/ssr` 0.5.2
+- 환경변수: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Ch8와 동일)
+- 인증 방식: 이메일/비밀번호(`signInWithPassword`)만 사용, 소셜 로그인 사용 안 함
+- 클라이언트에 `service_role` 키를 두지 않음
+- 보호 라우트는 `middleware.ts`로 구현함
+
+## 현재 설치(실제) 기준
+
+- `package.json`에 명시된 주요 패키지 버전:
+	- `next`: 16.2.6
+	- `@supabase/supabase-js`: ^2.106.0
+	- `@supabase/ssr`: ^0.10.3
+
+문서의 설명과 코드 예제는 교재 기준(위)으로 통일하지만, 빌드나 런타임 문제는 현재 설치된 버전 기준으로 진단해야 합니다.
 
 ## 해결된 이슈
 
